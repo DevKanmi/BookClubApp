@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 
 //Import Routes Here
 const signUpRouter = require('./routes/signUpRoute')
+const loginRouter = require('./routes/loginRoute')
 
 
 
@@ -39,6 +40,7 @@ app.use(middleware.requestLogger)
 
 
 app.use('/api/users', signUpRouter)
+app.use('/api/login',loginRouter)
 
 
 app.use(middleware.unknownEndpoint)
