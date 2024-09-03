@@ -17,11 +17,15 @@ const SignupSchema = new mongoose.Schema({
         required:true,
         unique: true
     },
-    passwordHash: String
+    passwordHash: String,
+    books :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book'
+    }]
 })
 
 SignupSchema.set('toJSON', {
-    transform:(document,returnedObject) =>{
+    transform:(document,returnedObject) => {
             returnedObject.id = returnedObject._id.toString()
             delete returnedObject._id
             delete returnedObject.__v

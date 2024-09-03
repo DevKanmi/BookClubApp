@@ -2,13 +2,14 @@ const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const middleware = require('./utils/middleware')
+const middleware = require('./middlewares/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
 //Import Routes Here
 const signUpRouter = require('./routes/signUpRoute')
 const loginRouter = require('./routes/loginRoute')
+const bookRouter = require('./routes/booksRoute')
 
 
 
@@ -24,7 +25,6 @@ async function DBconnecton () {
    // here
    logger.info('connected to MongoDB')
 }
-
 catch(error){
     logger.error('Error connecting to MongoDB :', error.message)
 }
@@ -41,6 +41,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/users', signUpRouter)
 app.use('/api/login',loginRouter)
+app.use('/api/book',bookRouter)
 
 
 app.use(middleware.unknownEndpoint)
