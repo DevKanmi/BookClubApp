@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 const signUpRouter = require('./routes/signUpRoute')
 const loginRouter = require('./routes/loginRoute')
 const bookRouter = require('./routes/booksRoute')
+const threadRouter = require('./routes/threadDiscussRoute')
 
 
 
@@ -42,6 +43,7 @@ app.use(middleware.requestLogger)
 app.use('/api/users', signUpRouter)
 app.use('/api/login',loginRouter)
 app.use('/api/book',bookRouter)
+app.use('/api/threads',threadRouter)
 
 
 app.use(middleware.unknownEndpoint)

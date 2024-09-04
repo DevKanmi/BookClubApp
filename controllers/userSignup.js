@@ -13,7 +13,8 @@ const createUser = async(request, response) =>{
 
     
     const {name, username, email, password} = request.body
-
+    
+    //Checks if the username is equals to Password
     if(username === password){
         return response.status(404).json({error:"Username and Password can't be the same"})
     }
