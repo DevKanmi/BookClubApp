@@ -1,5 +1,6 @@
 const User = require('../models/signUpSchema')
 const Book = require('../models/bookSchema')
+const { request, response } = require('../app')
 
 const createBook = async(request, response) =>{
     try{
@@ -38,11 +39,73 @@ const createBook = async(request, response) =>{
 
 
 const getBook = async(request, response) =>{
-    const book = await Book.find({}).populate('user')
+    if(!request.user){
+        return response.status(404).json({error: "You are not Allowed to Access this"})
+    }
+    const book = await Book.find({user:request.user.id}).populate('user')
+    response.status(200).json(book)
+}
+
+const updateBook = async (request, response) => {
+    const userId = request.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+        return response.status(404).json({ error: 'User not found' });
+    }
+    
+    //Fetches whatever field i pass in the request body
+    const updates = request.body;
+
+    const book = await Book.findOneAndUpdate(
+        { _id: request.params.id, user: userId },
+        { $set: updates }, //Only Changes what I passed and leaves the rest of field Unchanged.
+        { new: true }
+    );
+
+    if (!book) {
+        return response.status(404).json({ error: 'Book not found or not authorized' });
+    }
+
+    response.status(201).json(book);
+};
+
+const deleteBook = async(request, response) =>{
+    try{
+    const userid = request.user.id
+    const user = await User.findById(userid)
+    if(!user){
+        return response.status(404).json({error:"User does not exist"})
+     }
+    const book = await Book.findByIdAndDelete({_id: request.params.id, user: userid})
+    if(!book){
+        return response.status(404).json({error: "Bookd does not exist/You are not allowed to delete"})
+    }
+    response.status(204).end()
+}
+    catch(error){
+        return response.status(404).json({error:"Book Could not be deleted"})
+    }
+}
+
+const findOneBook = async(request,response) =>{
+    const userid = request.user.id
+    const user = await User.findById(userid)
+    if(!user){
+        return response.status(204).json({error: "user does not exist"})
+    }
+    const book = await Book.findById({_id: request.params.id, user: userid})
+    if(!book){
+        return response.status(404).json({error: "Book not found"})
+    }
+
     response.status(200).json(book)
 }
 
 module.exports ={
     createBook,
-    getBook
+    getBook,
+    updateBook,
+    deleteBook,
+    findOneBook
 }
