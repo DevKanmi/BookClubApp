@@ -5,6 +5,7 @@ const SignupSchema = new mongoose.Schema({
         type: String,
         required:true,
         unique: true,
+        lowercase: true
     },
     username:{
         type: String,
@@ -15,9 +16,8 @@ const SignupSchema = new mongoose.Schema({
     name:{
         type: String,
         required:true,
-        unique: true
     },
-    passwordHash: String,
+    passwordHash: {type: String, required:true,minlength:5},
     books :[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book'
