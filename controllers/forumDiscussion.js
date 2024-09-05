@@ -84,7 +84,7 @@ const deleteAThread = async(request,response) =>{
 
 const getAllThreads = async(request,response) =>{
   try{
-    const threads = await Thread.find({}).populate('book',{title: 1})
+    const threads = await Thread.find({}).populate('book',{title: 1}).populate('user',{username: 1}).populate('replies',{content:1,user: 1})
     if(!threads) return response.status(404).json({error:"No threads found"})
     response.status(200).json(threads)
   }

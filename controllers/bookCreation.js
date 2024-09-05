@@ -42,7 +42,7 @@ const getBook = async(request, response) =>{
     if(!request.user){
         return response.status(404).json({error: "You are not Allowed to Access this"})
     }
-    const book = await Book.find({user:request.user.id}).populate('user')
+    const book = await Book.find({user:request.user.id}).populate('user',{username: 1})
     response.status(200).json(book)
 }
 
