@@ -35,7 +35,7 @@ const bookSchema = new Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
 })
 
 bookSchema.set('toJSON', {

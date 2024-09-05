@@ -81,6 +81,10 @@ const deleteBook = async(request, response) =>{
     if(!book){
         return response.status(404).json({error: "Bookd does not exist/You are not allowed to delete"})
     }
+
+    await User.updateMany(
+        {books: request.params.id},
+        {$pull : {books: request.params.id}} ) //Removes BookId from user array after deletion.
     response.status(204).end()
 }
     catch(error){
