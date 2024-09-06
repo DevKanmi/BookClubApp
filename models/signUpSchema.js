@@ -21,6 +21,11 @@ const SignupSchema = new mongoose.Schema({
     books :[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book'
+    }],
+
+    clubs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Club'
     }]
 })
 

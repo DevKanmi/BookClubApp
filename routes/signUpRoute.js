@@ -3,8 +3,7 @@ const { validateSignup } = require('../middlewares/ValidationMiddleware')
 
 
 //Importing Controllers
-const createUser = require('../controllers/userSignup').createUser
-const getUser = require('../controllers/userSignup').getUser
+const {createUser,getUser} = require('../controllers/userSignup')
 
 
 

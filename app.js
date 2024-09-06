@@ -11,6 +11,7 @@ const signUpRouter = require('./routes/signUpRoute')
 const loginRouter = require('./routes/loginRoute')
 const bookRouter = require('./routes/booksRoute')
 const threadRouter = require('./routes/threadDiscussRoute')
+const clubRouter = require('./routes/clubRoute')
 
 
 
@@ -44,6 +45,7 @@ app.use('/api/users', signUpRouter)
 app.use('/api/login',loginRouter)
 app.use('/api/book',bookRouter)
 app.use('/api/threads',threadRouter)
+app.use('/api/clubs',clubRouter)
 
 
 app.use(middleware.unknownEndpoint)
