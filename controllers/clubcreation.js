@@ -81,6 +81,9 @@ const requestAccept = async(request,response) =>{  //ADMIN
     const {userid , action} = request.body
     const adminId = request.user.id
     const clubId = request.params.id
+
+    const user = await User.findById(userid)
+
     try{
         const club = await Club.findById(clubId)
         if (!club) return response.status(404).json({ error: "Club not found!" })
@@ -98,6 +101,8 @@ const requestAccept = async(request,response) =>{  //ADMIN
             club.joinRequests = club.joinRequests.filter(req => req.user.toString() != userid)
         }
         await club.save()
+        user.clubs = user.clubs.concat(club._id)
+        await user.save()
         response.status(200).json({message: action === 1 ?  `${userid} has been added to the club.` : `${userid}'s application has been rejected.`})
     }
     catch(error){
