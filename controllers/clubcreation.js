@@ -1,3 +1,4 @@
+const { response } = require('express')
 const Club = require('../models/clubSchema')
 const User  = require('../models/signUpSchema')
 
@@ -94,15 +95,16 @@ const requestAccept = async(request,response) =>{  //ADMIN
 
         if(action === 1){  //Approves
             club.members = club.members.concat(userid)
-            club.joinRequests = club.joinRequests.filter(req => req.user.toString() != userid)
+            club.joinRequests = club.joinRequests.filter(req => req.user.toString() !== userid)
+            user.clubs = user.clubs.concat(clubId)
+            await user.save()
         }
         
         if(action === 0){  //Delete
-            club.joinRequests = club.joinRequests.filter(req => req.user.toString() != userid)
+            club.joinRequests = club.joinRequests.filter(req => req.user.toString() !== userid)
         }
         await club.save()
-        user.clubs = user.clubs.concat(club._id)
-        await user.save()
+
         response.status(200).json({message: action === 1 ?  `${userid} has been added to the club.` : `${userid}'s application has been rejected.`})
     }
     catch(error){
@@ -110,10 +112,30 @@ const requestAccept = async(request,response) =>{  //ADMIN
     }
 }
 
+
+const requestStatus = async(request, response) =>{ ///Allows user to Check Current status of request.
+    const userid = request.user.id
+    const clubid = request.params.id
+    try{
+        const club = await Club.findById(clubid)
+        if(!club) return response.status(400).json({error: "Club does not exist!"})
+        if(club.members.includes(userid)) return response.status(200).json({message: "You are a Member!"})
+        const requests = club.joinRequests.find(req => req.user.toString() === userid)
+        if(requests) return response.status(200).json({message: "Request to Join is still Pending!"})
+        else{return response.status(200).json({message: "Request to join Club Has been denied!"})}
+
+    }
+    catch(error){
+        response.status(500).json({error : "Something is wrong!"})
+    }
+
+}   
+
 module.exports ={
     createClub,
     getAllClubs,
     joinClub,
     getPendingRequests,
-    requestAccept
+    requestAccept,
+    requestStatus
 }
