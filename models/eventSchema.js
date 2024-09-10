@@ -12,21 +12,24 @@ const eventSchema  = new Schema({
     },
     organizer :{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true,
     },
-    participants: {
+    participants: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Club"
-    },
+        ref: "User",
+    }],
     club: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Club"
+        ref: "Club",
+        required: true
     },
     duration: {
-        type: Number
+        type: String
     },
-    created: {
-        createdAt: Date.now()
+    createdAt: {
+        type: Date,
+        default: Date.now()
     }
 })
 

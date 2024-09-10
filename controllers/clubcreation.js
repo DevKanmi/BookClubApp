@@ -40,7 +40,7 @@ const joinClub = async(request, response) =>{ //ANY-USER
 try{
     const club = await Club.findById(clubid)
     if(!club) return response.status(400).json({error: "Club does not exist!"})
-    if(club.members.includes(requesterId)) return response.status(404).json({error: "You are a Member!"})
+    if(club.members.includes(requesterId)) return response.status(401).json({error: "You are a Member!"})
 
     
     //Check if a request already exist    
@@ -105,7 +105,7 @@ const requestAccept = async(request,response) =>{  //ADMIN
         }
         await club.save()
 
-        response.status(200).json({message: action === 1 ?  `${userid} has been added to the club.` : `${userid}'s application has been rejected.`})
+        response.status(200).json({message: action === 1 ?  `${user.username} has been added to the club.` : `${user.username}'s application has been rejected.`})
     }
     catch(error){
         response.status(500).json({error: "Something went wrong"})
