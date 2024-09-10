@@ -2,6 +2,7 @@ const Event = require('../models/eventSchema')
 const Club = require('../models/clubSchema')
 const User = require('../models/signUpSchema')
 const { getAllClubs } = require('./clubcreation')
+const { response } = require('express')
 
 const createEvent = async(request, response) =>{
     const { title,description,duration} = request.body
@@ -55,8 +56,40 @@ const viewEvents = async(request, response) =>{
     }
 }
 
+const deleteEvent = async(request,response) => {
+    const {eventId} = request.body
+    const userId = request.user.id
+    const clubId = request.params.id
+    try{
+        //Checks If User Exists
+        const user = await User.findById(userId)
+        if(!user) return response.status(404).json({error: "User was not found!"})
+        
+        //Find Event and ensure on User that Organized can delete
+        const event = await Event.findById(eventId)
+        if(!event) return response.status(404).json({error: "No Event is Found"})
+        if(event.organizer.toString() !== user._id.toString()) return response.status(403).json({error:"Only Event Organizer can delete Event!"})
+        
+        //Check if Event is In this Club, even if Event exists, we only want to delete events that are in particular clubs
+        const club = await Club.findById(clubId)
+        if(!club || !club.events.includes(event._id)) return response.status(404).json({error: "Can't Find Event in this Club!"})
+        
+        await Event.findByIdAndDelete(eventId)
+        //Delete Event from the Array of Events in Club
+        await Club.findByIdAndUpdate(
+            clubId,
+            {$pull : {events: eventId}}) //Removes EventId from Events array in Club after deletion.
+            response.status(204).end()
+        }
+    catch(error){
+        response.status(500).json({error: "Something Went Wrong"})
+    }
+    }
+
+
 
 module.exports = {
     createEvent,
-    viewEvents
+    viewEvents,
+    deleteEvent
 }
