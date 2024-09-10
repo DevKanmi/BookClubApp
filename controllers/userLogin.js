@@ -14,11 +14,11 @@ const userLogin = async(request,response) =>{
         $or: [{username:identifier},{email: identifier}] //This uses OR query to check if the identifier matches username or email in DB
     })
     if(!user){
-    response.status(401).json({error: 'Username or password is Incorrect'})
+    response.status(401).json({error: 'Username or Email Was not Found'})
     }
    const passwordIsCorrect = user === null? false : await bcrypt.compare(password, user.passwordHash)
    if(!passwordIsCorrect){
-    response.status(401).json({error: 'Password is not correct'})
+    response.status(401).json({error: 'Username or Password is not correct'})
    }
 
    const tokenForUser = {
