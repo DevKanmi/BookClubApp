@@ -65,7 +65,7 @@ const deleteEvent = async(request,response) => {
         const user = await User.findById(userId)
         if(!user) return response.status(404).json({error: "User was not found!"})
         
-        //Find Event and ensure on User that Organized can delete
+        //Find Event and ensure only User that Organized can delete
         const event = await Event.findById(eventId)
         if(!event) return response.status(404).json({error: "No Event is Found"})
         if(event.organizer.toString() !== user._id.toString()) return response.status(403).json({error:"Only Event Organizer can delete Event!"})
