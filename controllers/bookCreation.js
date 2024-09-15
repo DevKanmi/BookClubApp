@@ -70,6 +70,25 @@ const updateBook = async (request, response) => {
     response.status(201).json(book);
 };
 
+
+const updateBookHighlights = async(request,response) => {
+    const userId = request.user.id
+    const bookId = request.params.id
+    const {highlights} = request.body
+
+    try{
+        const book = await Book.findById({_id: bookId, user: userId})
+        book.highlights = book.highlights.concat(highlights)
+        const updated =  await book.save()
+        response.status(201).json(updated)
+        }
+    catch(error){
+        console.log(error)
+        response.status(500).json({error: "Something went wrong."})
+    }
+
+}
+
 const deleteBook = async(request, response) =>{
     try{
     const userid = request.user.id
@@ -111,5 +130,6 @@ module.exports ={
     getBook,
     updateBook,
     deleteBook,
-    findOneBook
+    findOneBook,
+    updateBookHighlights
 }
