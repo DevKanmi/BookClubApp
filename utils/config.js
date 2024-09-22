@@ -1,8 +1,7 @@
 //Create Configuration files
 require('dotenv').config()
 
-MONGODB_URI = process.env.MONGODB_URI  // connect your MongoDB using process.env.MONGODBURI
-
+MONGODB_URI = process.env.NODE_ENV === 'test' ? process.env.TEST_MONGODB_URI : process.env.MONGODB_URI
 PORT = process.env.PORT //connect your Port 
 
 
